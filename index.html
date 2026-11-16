@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Arsip Kenangan Hu Tao – Ruang Memori Abadi</title>
+  
+  <!-- Google Fonts: Shippori Mincho (Elegan/Tradisional), Zen Kaku Gothic New (Bersih), Caveat (Tulisan Tangan Polaroid) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas Animasi Latar Belakang (Kelopak Bunga & Partikel Cahaya) -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="ambient-glow"></div>
+
+  <!-- Tombol Musik Suasana (Floating Audio Controller) -->
+  <button id="music-btn" class="floating-pill-btn" aria-label="Putar Musik Suasana">
+    <span class="music-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+    </span>
+    <span class="music-text">Musik Suasana</span>
+    <span class="sound-wave">
+      <span></span><span></span><span></span>
+    </span>
+  </button>
+
+  <!-- 1. STAGE: LOADING SCREEN -->
+  <div class="stage on" id="load">
+    <div class="load-card">
+      <div class="spirit-orb">
+        <div class="orb-core"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-butterfly">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C13 2 15 2 16 3C18 5 19 8 18 11C17 14 14 15 12 16C10 15 7 14 6 11C5 8 6 5 8 3C9 2 11 2 12 4ZM12 16C13.5 17.5 16 20 18 20C19 20 20 19 20 18C20 16 18 14 16 13C14.5 14.5 13.5 15.5 12 16ZM12 16C10.5 17.5 8 20 6 20C5 20 4 19 4 18C4 16 6 14 8 13C9.5 14.5 10.5 15.5 12 16Z"/></svg>
+        </div>
+      </div>
+      <h2 class="serif load-title">Kotak Kenangan</h2>
+      <p class="load-desc" id="load-status">Menyiapkan lembaran memori...</p>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="load-bar"></div>
+      </div>
+      <div class="load-pct"><span id="pct">0</span>%</div>
+    </div>
+  </div>
+
+  <!-- 2. STAGE: ENTER / SELAMAT DATANG -->
+  <div class="stage" id="enter">
+    <div class="win glass-card win-enter">
+      <div class="seal-badge">
+        <span>胡桃</span>
+      </div>
+      <p class="serif sub-brand">Ruang Memori & Jejak Waktu</p>
+      <h1 class="serif main-title">Galeri & Lembar Kenangan</h1>
+      <p class="desc">
+        Kumpulan potret berharga, senyuman, dan cerita manis yang tersimpan rapi agar tak pernah lekang oleh waktu.
+      </p>
+      <div class="quote-box">
+        <span class="quote-mark">“</span>
+        <p class="quote-text">Satu saat untuk dikenang, beribu detik untuk dirindukan.</p>
+      </div>
+      <button class="btn btn-primary btn-glow" id="start">
+        <span>Buka Kotak Kenangan</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 3. STAGE: INTRO / SURAT MEMORI -->
+  <div class="stage" id="intro">
+    <div class="win glass-card win-intro">
+      <div class="card-header-tag">Surat Singkat</div>
+      <div class="letter-body">
+        <p id="typed"></p>
+        <span class="cursor-blink">|</span>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-ghost" id="skip-intro">Lewati</button>
+        <button class="btn btn-primary" id="next1">
+          <span>Lanjut ke Arsip</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. STAGE: LOGIN / KUNCI ARSIP -->
+  <div class="stage" id="login">
+    <div class="win glass-card win-login">
+      <div class="lock-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </div>
+      <h1 class="serif">Buka Kunci Memori</h1>
+      <p class="desc">Masukkan kata sandi rahasia untuk membuka lembaran potret kenangan.</p>
+      
+      <div class="form-container">
+        <div class="input-row">
+          <label class="input-label">Untuk</label>
+          <div class="static-val">Hu Tao</div>
+        </div>
+        
+        <div class="input-row">
+          <label for="pw" class="input-label">Kata Sandi</label>
+          <div class="input-field-wrap">
+            <input id="pw" type="password" placeholder="Ketik kata sandi..." autocomplete="off">
+            <button type="button" id="toggle-pw" class="btn-icon" aria-label="Lihat kata sandi">
+              <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hint-box">
+          <p class="hint">
+            <span class="hint-svg-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+            </span>
+            <b>Petunjuk:</b> Kata sandi rahasia untuk membuka kotak kenangan.
+          </p>
+          <button type="button" id="reveal-hint" class="link-btn">Lihat bocoran kata sandi</button>
+          <p id="hint-answer" class="hint-answer hidden">Jawabannya: <code>wangsheng</code></p>
+        </div>
+
+        <p class="err" id="err" role="alert"></p>
+
+        <div class="btn-group">
+          <button class="btn btn-ghost" id="clr">Hapus</button>
+          <button class="btn btn-primary" id="ok">
+            <span>Buka Arsip</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. STAGE: MAIN GALLERY -->
+  <main id="gallery">
+    <!-- Header Galeri -->
+    <header class="gallery-header">
+      <div class="header-branding">
+        <h2 class="serif">Kenangan <span>Hu Tao</span></h2>
+        <p class="sub">Setiap potret menyimpan kisah manis yang abadi.</p>
+      </div>
+
+      <!-- Navigation & Action Tools -->
+      <div class="tools-bar glass-bar">
+        <!-- Toggle Tampilan: Meja Hambur vs Album Rapi -->
+        <div class="view-toggle-wrap">
+          <button id="view-scatter" class="toggle-btn active" title="Tampilan Meja Hambur (Bisa digeser bebas)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Meja</span>
+          </button>
+          <button id="view-grid" class="toggle-btn" title="Tampilan Album Rapi (Grid tersusun rapi)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            <span>Album</span>
+          </button>
+        </div>
+
+        <div class="tools-divider"></div>
+
+        <!-- Tombol Acak Posisi -->
+        <button class="tool-btn" id="shuffle" title="Acak dan sebar ulang foto di meja">
+          <span class="icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+          </span>
+          <span class="label">Acak Meja</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Info Petunjuk Meja (Bisa digeser) -->
+    <div class="scatter-tip" id="scatter-tip">
+      <span class="tip-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+      </span>
+      <span><b>Tips:</b> Klik & geser foto untuk menata mejamu, atau klik foto untuk memperbesar.</span>
+    </div>
+
+    <!-- Kontainer Galeri Foto -->
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <!-- 6. MODAL: LIGHTBOX PRATINJAU FOTO -->
+  <div id="lb" role="dialog" aria-label="Pratinjau Foto Kenangan" aria-modal="true">
+    <div class="lb-backdrop" id="lb-backdrop"></div>
+    
+    <div class="lb-content">
+      <button class="lb-nav-btn lb-close" id="close" aria-label="Tutup Pratinjau">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <button class="lb-nav-btn lb-prev" id="prev" aria-label="Foto Sebelumnya">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      
+      <div class="lb-card-wrap">
+        <div class="lb-frame">
+          <img id="lbimg" alt="Foto Kenangan" loading="eager">
+        </div>
+        <div class="lb-footer">
+          <div class="lb-meta">
+            <span class="lb-tag">KENANGAN</span>
+            <h3 id="lbcap" class="serif"></h3>
+            <span id="lbcount" class="lb-counter"></span>
+          </div>
+          <div class="lb-actions">
+            <button id="lb-heart" class="btn-heart" title="Sukai Kenangan Ini">
+              <span class="heart-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              </span>
+              <span class="heart-count">Suka</span>
+            </button>
+            <a id="lb-download" class="btn-download" download="kenangan.jpg" title="Simpan / Unduh Foto">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Unduh</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <button class="lb-nav-btn lb-next" id="next" aria-label="Foto Berikutnya">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Script Eksternal -->
+  <script src="script.js"></script>
+</body>
+</html>
